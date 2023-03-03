@@ -26,7 +26,7 @@ export const getProductById: EventGetAPIGatewayProxyEvent<GetProductParams> = as
     if (item) {
       return prepareResponse(RESP_STATUS_CODES.OK,
         requestOrigin,
-        item
+        { message: 'MSG_PRODUCTS_FOUND', data: item }
       );
     } else {
       return prepareResponse(RESP_STATUS_CODES.NOT_FOUND,
