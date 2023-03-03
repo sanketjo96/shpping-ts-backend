@@ -1,0 +1,56 @@
+[
+    {
+      "id": "1b0fc71b-4d4a-4ec5-9514-4d4ba9e9e861",
+      "title": "Logitech G502 Hero Gaming Mouse",
+      "description": "A high-performance gaming mouse with a 16,000 DPI sensor and customizable RGB lighting.",
+      "price": 69.99
+    },
+    {
+      "id": "87b6eaa9-39d1-4c32-a10f-6ed311fda306",
+      "title": "Corsair K70 RGB Mechanical Gaming Keyboard",
+      "description": "A high-quality mechanical keyboard with Cherry MX RGB switches and per-key RGB lighting.",
+      "price": 149.99
+    },
+    {
+      "id": "f17dd5c2-7a56-4aa1-8806-75c25d3fc052",
+      "title": "HyperX Cloud II Gaming Headset",
+      "description": "A comfortable and durable gaming headset with 7.1 surround sound and a detachable noise-cancelling microphone.",
+      "price": 99.99
+    },
+    {
+      "id": "1c6d35f6-c2f6-4378-ae2e-7d07e8531c6f",
+      "title": "Razer Goliathus Extended Chroma Gaming Mouse Pad",
+      "description": "A large, soft gaming mouse pad with customizable RGB lighting.",
+      "price": 79.99
+    },
+    {
+      "id": "232e124c-22a2-4958-b131-5495cc7c15e9",
+      "title": "Logitech C922 Pro Stream Webcam",
+      "description": "A high-quality webcam with 1080p video capture and background replacement technology.",
+      "price": 99.99
+    },
+    {
+      "id": "2cfd09f1-33ea-4f0b-b2e2-918d981f8931",
+      "title": "SteelSeries QcK Gaming Surface",
+      "description": "A popular gaming mouse pad with a non-slip rubber base and a smooth cloth surface.",
+      "price": 19.99
+    },
+    {
+      "id": "87a1f44d-2c2f-4967-a127-83d0d7f4c6b8",
+      "title": "Astro A50 Wireless Gaming Headset",
+      "description": "A premium wireless gaming headset with Dolby Headphone 7.1 surround sound and a detachable boom microphone.",
+      "price": 299.99
+    },
+    {
+      "id": "b84f6826-57eb-4a51-8f77-fd5a5f5d5f02",
+      "title": "Razer Huntsman Elite Gaming Keyboard",
+      "description": "A high-performance mechanical gaming keyboard with Razer Chroma RGB lighting and customizable media keys.",
+      "price": 199.99
+    },
+    {
+      "id": "2a08c872-9e25-4a69-8ba7-267a84d7420d",
+      "title": "Logitech G Pro X Gaming Headset",
+      "description": "A professional-grade gaming headset with Blue VO!CE technology for advanced voice filters and effects.",
+      "price": 129.99
+    }
+  ]

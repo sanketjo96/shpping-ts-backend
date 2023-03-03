@@ -1,0 +1,10 @@
+{
+  "headers": {
+    "Content-Type": "application/json",
+    "origin": "http://localhost:3000"
+  },
+  "body": "{}",
+  "pathParameters": {
+    "id": "87b6eaa9-39d1-4c32-a10f-6ed311fda306"
+  }
+}
