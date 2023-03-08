@@ -1,9 +1,11 @@
 import * as dotenv from 'dotenv';
+import { v4 as uuidV4 } from 'uuid';
 import { IProductsDBController } from "./types/product.adpt.types";
 
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocument, ScanCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { ProductData, Product, Stock } from 'src/types/product';
+import { DynamoDBDocument, ScanCommand, QueryCommand, TransactWriteCommand } from "@aws-sdk/lib-dynamodb";
+import { ProductData, Product, Stock, CreateProductBody } from 'src/types/product';
+import { DEFAULT_ITEM_STOCK_COUNT } from 'src/utils/constants/app';
 
 dotenv.config()
 const { DB_REGION, DYNAMO_PRODUCTS_TABLE_NAME, DYNAMO_STOCKS_TABLE_NAME } = process.env;
@@ -59,6 +61,44 @@ export const productsDbDynamoAdapter: IProductsDBController = {
         return {
             ...product,
             count: stock?.count??0
+        };
+    },
+    async createProduct (createProductBody: CreateProductBody) {
+        const createProductId = uuidV4();
+
+        const createProductData = {
+            id: createProductId,
+            ...createProductBody,
+        };
+
+        const createStockData = {
+            count: DEFAULT_ITEM_STOCK_COUNT,
+            product_id: createProductId,
+        };
+
+        await dbClient.send(
+            new TransactWriteCommand({
+                TransactItems: [
+                    {
+                        Put: {
+                            TableName: DYNAMO_PRODUCTS_TABLE_NAME || '',
+                            Item: createProductData,
+                        }
+                    },
+                    {
+                        Put: {
+                            TableName: DYNAMO_STOCKS_TABLE_NAME || '',
+                            Item: createStockData,
+                        }
+                    }
+                ]
+
+            })
+        );
+
+        return {
+            product: createProductData,
+            stock: createStockData,
         };
     }
 }

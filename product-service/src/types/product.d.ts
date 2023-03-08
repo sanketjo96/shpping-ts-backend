@@ -9,6 +9,12 @@ export interface Product {
   title: string;
 }
 
+export interface CreateProductBody {
+  title: string;
+  description: string;
+  price: number;
+}
+
 export interface Stock {
   product_id: string;
   count: number;
