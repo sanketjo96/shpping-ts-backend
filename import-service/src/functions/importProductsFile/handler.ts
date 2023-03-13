@@ -1,16 +1,16 @@
 import { checkIfOriginAllowed, prepareResponse } from '@libs/api-gateway';
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { middyfy } from '@libs/lambda';
+
 import { EventGetAPIGatewayProxyEvent } from 'src/types/event';
 import { ImportFileQueryStringParams } from 'src/types/productFile';
 import { RESP_STATUS_CODES } from 'src/utils/constants/codes';
 
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
-
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 const { UPLOAD_BUCKET, BUCKET_REGION } = process.env;
 
-const importProductsFile: EventGetAPIGatewayProxyEvent<void, ImportFileQueryStringParams> = async (event) => {
+const importFileParser: EventGetAPIGatewayProxyEvent<void, ImportFileQueryStringParams> = async (event) => {
   const requestOrigin = event.headers.origin || '';
 
   if (!checkIfOriginAllowed(requestOrigin)) {
@@ -23,7 +23,7 @@ const importProductsFile: EventGetAPIGatewayProxyEvent<void, ImportFileQueryStri
     );
   }
 
-  console.log('importProductsFile Lambda triggered');
+  console.log('importFileParser Lambda triggered');
   const { queryStringParameters } = event || {};
   if (queryStringParameters && queryStringParameters.fileName) {
     const { fileName } = queryStringParameters
@@ -54,4 +54,4 @@ const importProductsFile: EventGetAPIGatewayProxyEvent<void, ImportFileQueryStri
   }
 };
 
-export const main = middyfy(importProductsFile);
+export const main = middyfy(importFileParser);
