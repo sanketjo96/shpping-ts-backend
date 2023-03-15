@@ -15,6 +15,7 @@
     "@aws-sdk/s3-request-presigner": "^3.288.0",
     "@middy/core": "^3.4.0",
     "@middy/http-json-body-parser": "^3.4.0",
+    "csv-parser": "^3.0.0",
     "fast-csv": "^4.3.6"
   },
   "devDependencies": {
