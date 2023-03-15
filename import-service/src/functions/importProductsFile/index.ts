@@ -6,7 +6,15 @@ export default {
     {
       http: {
         method: 'get',
-        path: 'import'
+        path: 'import',
+        cors: true,
+        request: {
+          parameters: {
+            querystrings: {
+              fileName: true
+            }
+          }
+        }
       },
     },
   ],
