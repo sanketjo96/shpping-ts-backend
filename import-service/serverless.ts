@@ -19,6 +19,7 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       BUCKET_REGION: 'us-east-1',
       UPLOAD_BUCKET: 's3-aws-js-upload',
+      SQS_URL: { "Fn::ImportValue": "sqsURL" },
     },
     iam: {
       role: {

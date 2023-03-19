@@ -54,6 +54,13 @@ const serverlessConfiguration: AWS = {
       }
     }
   },
+  outputs: {
+    "qURL": {
+      Description: "Outputs queue url to be consumed by other services",
+      Value: { Ref: "catalogItemsQueue" },
+      Export: { Name: "sqsURL" },
+    }
+  },
   // import the function via paths
   functions: { getProducts, getProductById, createProduct, createBatchProcess },
   package: { individually: true },
