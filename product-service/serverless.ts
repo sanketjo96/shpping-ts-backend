@@ -22,7 +22,9 @@ const serverlessConfiguration: AWS = {
       DB_REGION: 'us-east-1',
       SQS_QUEUE_URL: { Ref: "catalogItemsQueue" },
       DYNAMO_PRODUCTS_TABLE_NAME: 'products',
-      DYNAMO_STOCKS_TABLE_NAME: 'stocks'
+      DYNAMO_STOCKS_TABLE_NAME: 'stocks',
+      SNS_REGION: 'us-east-1',
+      SNS_TOPIC_ARN: { Ref: "ProductAddedTopic" },
     },
     iam: {
       role: {
@@ -40,6 +42,11 @@ const serverlessConfiguration: AWS = {
             Action: "sqs:*",
             Resource: { "Fn::GetAtt": ["catalogItemsQueue", "Arn"] },
           },
+          {
+            Effect: "Allow",
+            Action: "sns:*",
+            Resource: { Ref: "ProductAddedTopic" },
+          },
         ]
       }
     }
@@ -50,6 +57,22 @@ const serverlessConfiguration: AWS = {
         Type: "AWS::SQS::Queue",
         Properties: {
           QueueName: "catalogItemsQueue",
+        },
+      },
+      ProductAddedTopic: {
+        Type: "AWS::SNS::Topic",
+        Properties: {
+          TopicName: "ProductAddedTopic",
+        },
+      },
+      createProductSubscription: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Protocol: "email",
+          Endpoint: "sanket_joshi@epam.com",
+          TopicArn: {
+            Ref: "ProductAddedTopic",
+          },
         },
       }
     },

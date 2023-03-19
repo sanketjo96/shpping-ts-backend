@@ -1,6 +1,10 @@
 import { SQSEvent } from "aws-lambda";
+import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
+
 import { productsDbDynamoAdapter } from "src/dynamodb/product.adpt";
 import { CreateProductBody } from "src/types/product";
+
+const { SNS_REGION, SNS_TOPIC_ARN } = process.env;
 
 const createBatchProcess = async (event: SQSEvent) => {
   console.log('createBatchProcess triggered');
@@ -21,6 +25,15 @@ const createBatchProcess = async (event: SQSEvent) => {
     console.log(productRecords)
     await productsDbDynamoAdapter.createProducts(productRecords);
     console.log('createBatchProcess completed');
+
+    const snsClient = new SNSClient({ region: SNS_REGION });
+    const command = new PublishCommand({
+      TopicArn: SNS_TOPIC_ARN,
+      Subject: "Products added successfully",
+      Message: `${productRecords.length} Products added`
+    });
+    const response = await snsClient.send(command);
+    console.log('Sent email notification', response);
   } catch (e) {
     console.log(e)
   }
