@@ -1,4 +1,5 @@
 import { S3Client, GetObjectCommand, CopyObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
+import { SendMessageCommand } from "@aws-sdk/client-sqs";
 import csvParser from 'csv-parser';
 import { EventBucketTrigger } from 'src/types/event';
 import { RESP_STATUS_CODES } from "src/utils/constants/codes";
@@ -56,8 +57,14 @@ const importFileParser = async (event: EventBucketTrigger) => {
       return new Promise((resolve, reject) => {
         s3StreamBody
           .pipe(csvParser())
-          .on('data', (data) => {
-            console.log(RECORD_INFO, `Parsing product import CSV data: `, data);
+          .on('data', async (data) => {
+            const command = new SendMessageCommand({
+              QueueUrl: process.env.SQS_URL,
+              MessageBody: JSON.stringify(data),
+            });
+            const response = await s3Client.send(command);
+            console.log(RECORD_INFO, `Sent product data to SQS `);
+            console.log('SQS res', response)
           })
           .on('error', (error) => {
             console.error(RECORD_INFO, `Parsing error for product import CSV data: `, error);
