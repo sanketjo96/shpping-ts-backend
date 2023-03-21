@@ -33,8 +33,8 @@ export const createBatchProcess = async (event: SQSEvent) => {
       Message: `${productRecords.length} Products added`,
       MessageAttributes: {
         less_products: {
-          DataType: "string",
-          StringValue: productRecords.length <= 2 ? 'true' : 'false'
+          DataType: "String",
+          StringValue: productRecords.length < 2 ? 'true' : 'false'
         }
       }
     });
