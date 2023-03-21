@@ -6,7 +6,7 @@ import { CreateProductBody } from "src/types/product";
 
 const { SNS_REGION, SNS_TOPIC_ARN } = process.env;
 
-const createBatchProcess = async (event: SQSEvent) => {
+export const createBatchProcess = async (event: SQSEvent) => {
   console.log('createBatchProcess triggered');
 
   try {
@@ -30,7 +30,13 @@ const createBatchProcess = async (event: SQSEvent) => {
     const command = new PublishCommand({
       TopicArn: SNS_TOPIC_ARN,
       Subject: "Products added successfully",
-      Message: `${productRecords.length} Products added`
+      Message: `${productRecords.length} Products added`,
+      MessageAttributes: {
+        less_products: {
+          DataType: "string",
+          StringValue: productRecords.length <= 2 ? 'true' : 'false'
+        }
+      }
     });
     const response = await snsClient.send(command);
     console.log('Sent email notification', response);

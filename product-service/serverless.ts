@@ -74,7 +74,20 @@ const serverlessConfiguration: AWS = {
             Ref: "ProductAddedTopic",
           },
         },
-      }
+      },
+      filterSubscription: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Protocol: "email",
+          FilterPolicy: {
+            less_products: ["true"],
+          },
+          Endpoint: "sanketjoshi96@gmail.com",
+          TopicArn: {
+            Ref: "ProductAddedTopic",
+          },
+        },
+      },
     },
     Outputs: {
       qURL: {
