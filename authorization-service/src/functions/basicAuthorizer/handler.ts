@@ -1,17 +1,35 @@
 import { APIGatewayRequestAuthorizerEvent } from 'aws-lambda';
 import { Effect, generateResponse } from 'src/utils';
 
-const { sanketjoshi96 } = process.env;
+const { AUTH_USERNAME, AUTH_PASSWORD } = process.env;
 
-const basicAuthorizer = async (event: APIGatewayRequestAuthorizerEvent) => {
+const basicAuthorizer = async (event: APIGatewayRequestAuthorizerEvent, ctx, callback) => {
   console.log('Auth handler triggered');
 
   const { headers, methodArn } = event;
-  const principalId = 'sanketjoshi96';
+  const authorizationHeader = headers.Authorization;
+  if (!authorizationHeader) {
+    return callback("Unauthorized");
+  }
 
-  const response = headers.Authorization === sanketjoshi96
-    ? generateResponse(principalId, Effect.Allow, methodArn)
-    : generateResponse(principalId, Effect.Deny, methodArn)
+  console.log('authorizationHeader', authorizationHeader)
+  const encodedCreds = authorizationHeader.split(" ")[1];
+
+  if (!encodedCreds) {
+    return callback("Unauthorized");
+  }
+
+  const [username, password] = Buffer.from(encodedCreds, "base64")
+    .toString()
+    .split(":");
+
+  console.log('Decode', username, password)
+  let response = {}
+  if (username === AUTH_USERNAME && password === AUTH_PASSWORD) {
+    response = generateResponse(username, Effect.Allow, methodArn);
+  } else {
+    response = generateResponse(username, Effect.Deny, methodArn)
+  }
 
   return response;
 };
