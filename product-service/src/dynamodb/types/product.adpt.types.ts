@@ -7,4 +7,7 @@ export interface IProductsDBController {
         product: Product; 
         stock: Stock;
     }>
+    createProducts: (productDataList: CreateProductBody[]) => Promise<{
+        productCreatedCount: number
+    }>
 }
