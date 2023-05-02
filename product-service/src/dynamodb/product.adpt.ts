@@ -60,10 +60,10 @@ export const productsDbDynamoAdapter: IProductsDBController = {
 
         return {
             ...product,
-            count: stock?.count??0
+            count: stock?.count ?? 0
         };
     },
-    async createProduct (createProductBody: CreateProductBody) {
+    async createProduct(createProductBody: CreateProductBody) {
         const createProductId = uuidV4();
 
         const createProductData = {
@@ -99,6 +99,27 @@ export const productsDbDynamoAdapter: IProductsDBController = {
         return {
             product: createProductData,
             stock: createStockData,
+        };
+    },
+    async createProducts(productDataList: CreateProductBody[]) {
+        const productItems = productDataList.map(item => ({
+            Put: {
+                TableName: DYNAMO_PRODUCTS_TABLE_NAME || '',
+                Item: {
+                    id: uuidV4(),
+                    ...item,
+                }
+            }
+        }));
+
+        await dbClient.send(
+            new TransactWriteCommand({
+                TransactItems: productItems
+            })
+        );
+
+        return {
+            productCreatedCount: productItems.length,
         };
     }
 }

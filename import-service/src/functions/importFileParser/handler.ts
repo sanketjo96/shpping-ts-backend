@@ -1,11 +1,12 @@
 import { S3Client, GetObjectCommand, CopyObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import csvParser from 'csv-parser';
 import { EventBucketTrigger } from 'src/types/event';
 import { RESP_STATUS_CODES } from "src/utils/constants/codes";
 import { ERR_MSGS } from "src/utils/constants/messages";
 import { Readable } from "stream";
 
-const { UPLOAD_BUCKET, BUCKET_REGION } = process.env;
+const { UPLOAD_BUCKET, BUCKET_REGION, SQS_REGION, SQS_URL } = process.env;
 
 const _copyAndDelete = async (client, record) => {
   const copyCmd = new CopyObjectCommand({
@@ -56,8 +57,17 @@ const importFileParser = async (event: EventBucketTrigger) => {
       return new Promise((resolve, reject) => {
         s3StreamBody
           .pipe(csvParser())
-          .on('data', (data) => {
-            console.log(RECORD_INFO, `Parsing product import CSV data: `, data);
+          .on('data', async (data) => {
+            const sqsClient = new SQSClient({
+              region: SQS_REGION
+            })
+            const command = new SendMessageCommand({
+              QueueUrl: SQS_URL,
+              MessageBody: JSON.stringify(data),
+            });
+            const response = await sqsClient.send(command);
+            console.log(RECORD_INFO, `Sent product data to SQS `);
+            console.log('SQS res', response)
           })
           .on('error', (error) => {
             console.error(RECORD_INFO, `Parsing error for product import CSV data: `, error);

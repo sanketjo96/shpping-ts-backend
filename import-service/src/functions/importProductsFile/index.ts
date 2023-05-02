@@ -14,6 +14,10 @@ export default {
               fileName: true
             }
           }
+        },
+        authorizer: {
+          arn: 'arn:aws:lambda:us-east-1:108404791142:function:authorization-service-dev-basicAuthorizer',
+          type: 'request'
         }
       },
     },
